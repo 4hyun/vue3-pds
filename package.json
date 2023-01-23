@@ -5,5 +5,6 @@
   "private":true,
   "repository": "https://github.com/4hyun/vue3-pds",
   "author": "Sa Hyun Hwang <4hyun8@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "workspaces": ["packages/pds-daily"]
 }
