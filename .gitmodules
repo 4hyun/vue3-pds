@@ -1,0 +1,3 @@
+[submodule "packages/pds-daily"]
+	path = packages/pds-daily
+	url = https://github.com/4hyun/vue3-pds-daily.git
