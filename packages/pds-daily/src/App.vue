@@ -5,14 +5,21 @@ import PanelMain from './components/PanelMain.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <img
+      alt="Vue logo"
+      class="logo"
+      src="@/assets/logo.svg"
+      width="125"
+      height="125"
+    />
 
     <div class="wrapper">
-      <PanelMain title="PDS Journal"/>
+      <PanelMain title="PDS Journal" />
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/day-organizer">Day Organizer</RouterLink>
       </nav>
     </div>
   </header>
