@@ -3,15 +3,14 @@ import { GridLayout, GridItem } from 'vue3-grid-layout-next'
 import data from '@/data/mock-simple'
 
 const layout = data
-
-// defineProps<{
-//   title: string
-// }>()
+const layoutUpdatedEvent = (...args) => {
+  console.log('DEBUG_layoutUpdatedEvent: ', args)
+}
 </script>
 
 <template>
   <div class="greetings">
-    <GridLayout v-model:layout="layout">
+    <GridLayout v-model:layout="layout" @layout-updated="layoutUpdatedEvent">
       <GridItem v-for="item in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="item.i">
         {{ item.i }}
       </GridItem>
@@ -46,6 +45,15 @@ h3 {
 :global(.vue-grid-item) {
   border-width: 2px;
   border-style: solid;
-  border-color: red;
+  border-color: var(--vt-c-indigo);
+  border-radius: 4px;
+}
+
+:global(.vue-grid-item.vue-grid-placeholder) {
+  background: rgb(7, 31, 216);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--vt-c-indigo);
+  border-radius: 4px;
 }
 </style>
