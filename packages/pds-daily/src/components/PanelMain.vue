@@ -1,19 +1,41 @@
 <script setup lang="ts">
 import { GridLayout, GridItem } from 'vue3-grid-layout-next'
 import data from '@/data/mock-simple'
+import { type Slots } from 'vue'
 
 const layout = data
+type Item = (typeof data)[number]
 const layoutUpdatedEvent = (...args) => {
   console.log('DEBUG_layoutUpdatedEvent: ', args)
+}
+const onItemHover = ($event: MouseEvent, item: Item) => {
+  console.log('DEBUG_onItemHover: ', { item })
+}
+
+function Popover(
+  props: { item: Item; key: string },
+  { slots }: { slots: Slots }
+) {
+  // console.log({ slots, props })
+  return slots?.default ? slots.default() : null
 }
 </script>
 
 <template>
   <div class="greetings">
     <GridLayout v-model:layout="layout" @layout-updated="layoutUpdatedEvent">
-      <GridItem v-for="item in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="item.i">
-        {{ item.i }}
-      </GridItem>
+      <Popover v-for="item in layout" :item="item" :key="item.i">
+        <GridItem
+          :x="item.x"
+          :y="item.y"
+          :w="item.w"
+          :h="item.h"
+          :i="item.i"
+          @mouseover="onItemHover($event, item)"
+        >
+          {{ item.i }}
+        </GridItem>
+      </Popover>
     </GridLayout>
   </div>
 </template>
@@ -35,7 +57,6 @@ h3 {
 }
 
 @media (min-width: 1024px) {
-
   .greetings h1,
   .greetings h3 {
     text-align: left;
