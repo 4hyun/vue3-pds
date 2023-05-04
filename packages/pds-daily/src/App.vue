@@ -17,8 +17,6 @@ import PanelMain from './components/PanelMain.vue'
       <PanelMain title="PDS Journal" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/day-organizer">Day Organizer</RouterLink>
       </nav>
     </div>
