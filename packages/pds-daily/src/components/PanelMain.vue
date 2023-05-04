@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import { onMounted, inject, type Slots } from 'vue'
 import { GridLayout, GridItem } from 'vue3-grid-layout-next'
 import data from '@/data/mock-simple'
-import { type Slots } from 'vue'
+import client, { requestConfig, tokenURL } from '@/api/swit'
+import type { Auth, SwitTokenResponse } from '@/auth'
 
+const $auth = inject<Auth>('$auth')
 const layout = data
 type Item = (typeof data)[number]
 const layoutUpdatedEvent = (...args) => {
   console.log('DEBUG_layoutUpdatedEvent: ', args)
 }
 const onItemHover = ($event: MouseEvent, item: Item) => {
-  console.log('DEBUG_onItemHover: ', { item })
+  // console.log('DEBUG_onItemHover: ', { item })
 }
 
 function Popover(
@@ -19,10 +22,51 @@ function Popover(
   // console.log({ slots, props })
   return slots?.default ? slots.default() : null
 }
+
+const authorizeRequestConfig = requestConfig.authorize()
+const authorizeParams = new URLSearchParams(authorizeRequestConfig.params)
+const authorizeLink = `${
+  authorizeRequestConfig.url
+}/?${authorizeParams.toString()}`
+
+const useAuthTokenAsync = async (): Promise<[SwitTokenResponse] | []> => {
+  const { search } = new URL(window.location.href)
+  let result: [] | [SwitTokenResponse] = []
+  const searchParams = new URLSearchParams(search)
+  const code = searchParams.get('code')
+  console.log({ searchParams, tokenURL, code, client })
+  if (!code) return result
+
+  try {
+    const [url, params, config] = requestConfig.token(code)
+    console.log({ url, params, config })
+    const response = await client.post<SwitTokenResponse>(
+      url,
+      new URLSearchParams(params),
+      config
+    )
+    console.log({ response })
+    if (!response.data) return result
+    result = [response.data]
+    return result
+  } catch (error) {
+    console.log('token error', error)
+    return result
+  }
+}
+
+onMounted(async () => {
+  const [tokenResponse] = await useAuthTokenAsync()
+  if (tokenResponse) {
+    console.log({ tokenResponse })
+    $auth?.handleTokenResponse(tokenResponse)
+  }
+})
 </script>
 
 <template>
   <div class="greetings">
+    <a :href="authorizeLink">authorize</a>
     <GridLayout v-model:layout="layout" @layout-updated="layoutUpdatedEvent">
       <Popover v-for="item in layout" :item="item" :key="item.i">
         <GridItem
