@@ -14,14 +14,15 @@ const formatMonth = (month: number) => (month > 10 ? `${month}` : `0${month}`)
 const groupInWeeks = (days) => {
   const weeks = []
   const indexEnd = 6
-  for (let i = 0; i + 6 <= days.length + 6; i + 6) {
-    const week = days.slice(i, i + 6)
+  for (let i = 0; i + 6 <= days.length + indexEnd; i += indexEnd) {
+    const week = days.slice(i, i + indexEnd)
     weeks.push(week)
   }
   return weeks
 }
 
-const initDaysToWeeks = (daysInt) => {
+const initDays = (daysInt) => {
+  if (typeof daysInt !== 'number') throw new TypeError('initDays')
   return Array.from({ length: daysInt }, (_, index) => {
     return index + 1
   })
@@ -31,7 +32,7 @@ export default defineComponent({
   name: 'DailyOrganizer',
   data() {
     return {
-      currentWeeks: undefined,
+      // currentWeeks: undefined,
       currentDayIndex: 0,
       currentMonthIndex: 0,
       currentYear: this.getCurrentYear(),
@@ -46,14 +47,17 @@ export default defineComponent({
     //   })
     // },
 
-    setCurrentWeeks(weeks) {
-      this.currentWeeks = weeks
-    },
+    // setCurrentWeeks(weeks) {
+    //   console.log('111', { weeks })
+    //   this.currentWeeks = weeks
+    // },
     setCurrentDaysInMonth() {
       const value = this.getCurrentDaysInMonth()
       this.currentDaysInMonth = value
-      const weeks = initDaysToWeeks(value)
-      this.setCurrentWeeks(weeks)
+      /** days list */
+      const days = initDays(value)
+      const weeks = groupInWeeks(days)
+      // this.setCurrentWeeks(weeks)
     },
     getCurrentDaysInMonth() {
       const month = formatMonth(this.currentMonthIndex + 1)
@@ -90,7 +94,13 @@ export default defineComponent({
     DAILY ORAGNIZER
     <!-- <button @click="onClick">header test</button> -->
     <div class="day-organizer__head">
-      <span @click="moveYearCursor(-1)">{{ ` < ` }}</span>
+      <span
+        @click="moveYearCursor(-1)"
+        :style="{
+          cursor: 'pointer',
+        }"
+        >{{ ` < ` }}</span
+      >
       <span>{{ currentYear }}</span>
       <span @click="moveYearCursor()">{{ ` > ` }}</span>
       <br />
@@ -100,13 +110,13 @@ export default defineComponent({
       <span>currentDaysInMonth: {{ currentDaysInMonth }}</span>
     </div>
     <div class="day-organizer__body">
-      <div class="weeks-container">
-        <div class="weeks-wrapper">
-          <div class="week" v-for="week in currentWeeks">
+      <!-- <div class="weeks-container">
+        <div class="weeks-wrapper" v-if="currentWeeks">
+          <div class="week" key="" v-for="week in currentWeeks">
             {{ week }}
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

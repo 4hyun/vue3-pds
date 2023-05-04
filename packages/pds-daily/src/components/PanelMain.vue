@@ -1,15 +1,21 @@
 <script setup lang="ts">
-defineProps<{
-  title: string
-}>();
+import { GridLayout, GridItem } from 'vue3-grid-layout-next'
+import data from '@/data/mock-simple'
+
+const layout = data
+
+// defineProps<{
+//   title: string
+// }>()
 </script>
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ title }}</h1>
-    <h3>
-      PDS templates made with vue
-    </h3>
+    <GridLayout v-model:layout="layout">
+      <GridItem v-for="item in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="item.i">
+        {{ item.i }}
+      </GridItem>
+    </GridLayout>
   </div>
 </template>
 
@@ -30,9 +36,16 @@ h3 {
 }
 
 @media (min-width: 1024px) {
+
   .greetings h1,
   .greetings h3 {
     text-align: left;
   }
+}
+
+:global(.vue-grid-item) {
+  border-width: 2px;
+  border-style: solid;
+  border-color: red;
 }
 </style>
