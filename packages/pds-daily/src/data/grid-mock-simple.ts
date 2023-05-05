@@ -1,4 +1,4 @@
-export default [
+const grid = [
   { x: 0, y: 0, w: 2, h: 2, i: '0' },
   { x: 2, y: 0, w: 2, h: 4, i: '1' },
   { x: 4, y: 0, w: 2, h: 5, i: '2' },
@@ -20,3 +20,5 @@ export default [
   { x: 0, y: 9, w: 2, h: 3, i: '18' },
   { x: 2, y: 6, w: 2, h: 2, i: '19' },
 ]
+
+export default grid

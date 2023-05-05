@@ -1,13 +1,43 @@
 <script setup lang="ts">
 import { onMounted, inject, type Slots } from 'vue'
 import { GridLayout, GridItem } from 'vue3-grid-layout-next'
-import data from '@/data/mock-simple'
+import data from '@/data/grid-mock-simple'
 import client, { requestConfig, tokenURL } from '@/api/swit'
 import type { Auth, SwitTokenResponse } from '@/auth'
+import { createApplyGridItemData } from '@/helpers/grid-view-features'
+import { tasksList as tasksListData } from '@/data/swit-tasks-list'
+
+type Item = (typeof data)[number]
+
+const LayoutTransformType = {
+  A: 'short',
+  B: 'unit-square'
+} as const
+
+type LayoutTransform = typeof LayoutTransformType[keyof typeof LayoutTransformType]
+const layoutTransformer = {
+  [LayoutTransformType.A]: (data: Item[]) => {
+    return data.map(({ h, ...rest }) => ({ ...rest, h: 2 }))
+  },
+  [LayoutTransformType.B]: (data: Item[]) => {
+    return data.map(({ h, ...rest }) => ({ ...rest, h: 1 }))
+  }
+}
+
+function transformLayout(
+  data: Item[],
+  type: LayoutTransform | undefined = undefined
+) {
+  if (!type) return data
+  return layoutTransformer[type](data)
+
+}
 
 const $auth = inject<Auth>('$auth')
-const layout = data
-type Item = (typeof data)[number]
+let layout = transformLayout(data, LayoutTransformType.B)
+const applyGridItemData = createApplyGridItemData(layout)
+const tasksList = tasksListData.map(applyGridItemData)
+const layoutFromTasksList = tasksList.map(({ _grid, id }) => ({ ..._grid, id }))
 const layoutUpdatedEvent = (...args) => {
   console.log('DEBUG_layoutUpdatedEvent: ', args)
 }
@@ -25,9 +55,8 @@ function Popover(
 
 const authorizeRequestConfig = requestConfig.authorize()
 const authorizeParams = new URLSearchParams(authorizeRequestConfig.params)
-const authorizeLink = `${
-  authorizeRequestConfig.url
-}/?${authorizeParams.toString()}`
+const authorizeLink = `${authorizeRequestConfig.url
+  }/?${authorizeParams.toString()}`
 
 const useAuthTokenAsync = async (): Promise<[SwitTokenResponse] | []> => {
   const { search } = new URL(window.location.href)
@@ -61,23 +90,19 @@ onMounted(async () => {
     console.log({ tokenResponse })
     $auth?.handleTokenResponse(tokenResponse)
   }
+
+
 })
 </script>
 
 <template>
   <div class="greetings">
     <a :href="authorizeLink">authorize</a>
-    <GridLayout v-model:layout="layout" @layout-updated="layoutUpdatedEvent">
-      <Popover v-for="item in layout" :item="item" :key="item.i">
-        <GridItem
-          :x="item.x"
-          :y="item.y"
-          :w="item.w"
-          :h="item.h"
-          :i="item.i"
-          @mouseover="onItemHover($event, item)"
-        >
-          {{ item.i }}
+    <GridLayout v-model:layout="layoutFromTasksList" @layout-updated="layoutUpdatedEvent">
+      <Popover v-for="item in tasksList" :item="item" :key="item._grid.i">
+        <GridItem :x="item._grid.x" :y="item._grid.y" :w="item._grid.w" :h="item._grid.h" :i="item._grid.i"
+          @mouseover="onItemHover($event, item)">
+          {{ item._grid.i }}
         </GridItem>
       </Popover>
     </GridLayout>
@@ -101,6 +126,7 @@ h3 {
 }
 
 @media (min-width: 1024px) {
+
   .greetings h1,
   .greetings h3 {
     text-align: left;
