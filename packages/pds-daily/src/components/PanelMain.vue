@@ -11,17 +11,18 @@ type Item = (typeof data)[number]
 
 const LayoutTransformType = {
   A: 'short',
-  B: 'unit-square'
+  B: 'unit-square',
 } as const
 
-type LayoutTransform = typeof LayoutTransformType[keyof typeof LayoutTransformType]
+type LayoutTransform =
+  (typeof LayoutTransformType)[keyof typeof LayoutTransformType]
 const layoutTransformer = {
   [LayoutTransformType.A]: (data: Item[]) => {
     return data.map(({ h, ...rest }) => ({ ...rest, h: 2 }))
   },
   [LayoutTransformType.B]: (data: Item[]) => {
     return data.map(({ h, ...rest }) => ({ ...rest, h: 1 }))
-  }
+  },
 }
 
 function transformLayout(
@@ -30,7 +31,6 @@ function transformLayout(
 ) {
   if (!type) return data
   return layoutTransformer[type](data)
-
 }
 
 const $auth = inject<Auth>('$auth')
@@ -55,8 +55,9 @@ function Popover(
 
 const authorizeRequestConfig = requestConfig.authorize()
 const authorizeParams = new URLSearchParams(authorizeRequestConfig.params)
-const authorizeLink = `${authorizeRequestConfig.url
-  }/?${authorizeParams.toString()}`
+const authorizeLink = `${
+  authorizeRequestConfig.url
+}/?${authorizeParams.toString()}`
 
 const useAuthTokenAsync = async (): Promise<[SwitTokenResponse] | []> => {
   const { search } = new URL(window.location.href)
@@ -90,18 +91,25 @@ onMounted(async () => {
     console.log({ tokenResponse })
     $auth?.handleTokenResponse(tokenResponse)
   }
-
-
 })
 </script>
 
 <template>
   <div class="greetings">
     <a :href="authorizeLink">authorize</a>
-    <GridLayout v-model:layout="layoutFromTasksList" @layout-updated="layoutUpdatedEvent">
+    <GridLayout
+      v-model:layout="layoutFromTasksList"
+      @layout-updated="layoutUpdatedEvent"
+    >
       <Popover v-for="item in tasksList" :item="item" :key="item._grid.i">
-        <GridItem :x="item._grid.x" :y="item._grid.y" :w="item._grid.w" :h="item._grid.h" :i="item._grid.i"
-          @mouseover="onItemHover($event, item)">
+        <GridItem
+          :x="item._grid.x"
+          :y="item._grid.y"
+          :w="item._grid.w"
+          :h="item._grid.h"
+          :i="item._grid.i"
+          @mouseover="onItemHover($event, item)"
+        >
           {{ item._grid.i }}
         </GridItem>
       </Popover>
@@ -126,7 +134,6 @@ h3 {
 }
 
 @media (min-width: 1024px) {
-
   .greetings h1,
   .greetings h3 {
     text-align: left;
