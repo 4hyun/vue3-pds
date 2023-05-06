@@ -9,17 +9,28 @@ export const filterParent = (data: SwitTaskItem[]) => {
   return result
 }
 
-export const createApplyGridItemData =
-  (grid: GridBase[]) => (item: SwitTaskItem, i: number) => {
+export interface CreateGrid<T = {}> {
+  (options?: Partial<GridBase> & T): GridBase
+  options?: Partial<GridBase>
+  _config: any
+}
+export const createApplyGridItemData = (grid: GridBase[] | CreateGrid) => {
+  return (item: SwitTaskItem, i: number) => {
+    let _grid
     if (typeof i !== 'number')
       console.warn(
         'if `i` is not a number, by default all grid info added will be of grid[0].'
       )
-    let pickIndex =
-      grid.length - 1 > i ? (grid.length - 1) % i : i % (grid.length - 1)
-    if (isNaN(pickIndex)) pickIndex = 1
-    const _grid = _cloneDeep(grid[pickIndex])
-    // debugger
-    _grid.i = '' + i
+    if (typeof grid === 'function') {
+      _grid = grid({ i: '' + i, ...item })
+    } else {
+      let pickIndex =
+        grid.length - 1 > i ? (grid.length - 1) % i : i % (grid.length - 1)
+      if (isNaN(pickIndex)) pickIndex = 1
+      _grid = _cloneDeep(grid[pickIndex])
+      // debugger
+      _grid.i = '' + i
+    }
     return Object.assign(_cloneDeep(item), { _grid })
   }
+}
