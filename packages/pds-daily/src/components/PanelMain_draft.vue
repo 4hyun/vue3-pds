@@ -15,7 +15,7 @@ import { useGlobalDialogs } from '@/composables/use-global-dialogs'
 import { DialogId } from '@/common/dialogs'
 
 const TaskItemDetailFilters = {
-  Content: 'content'
+  Content: 'content',
 }
 
 const useSelection = () => {
@@ -122,10 +122,9 @@ function Popover(
   return slots?.default ? slots.default() : null
 }
 
-const authorizeRequestConfig = apis.authorize()
-const authorizeParams = new URLSearchParams(authorizeRequestConfig.params)
-const authorizeLink = `${authorizeRequestConfig.url
-  }/?${authorizeParams.toString()}`
+const authorizeRequest = apis.authorize()
+const authorizeParams = new URLSearchParams(authorizeRequest.params)
+const authorizeLink = `${authorizeRequest.url}/?${authorizeParams.toString()}`
 
 const useAuthTokenAsync = async (): Promise<[SwitTokenResponse] | []> => {
   const { search } = new URL(window.location.href)
@@ -172,17 +171,23 @@ const onChangeCheckboxAll = (evt) => {
     selection.selectAll(layoutFromTasksList.map(({ i }) => i))
   else selection.deselectAll()
 }
+
+const gridLayoutClasses = computed(() => {
+  const contentEmpty: [] | [string] = []
+  return { contentEmpty }
+})
 </script>
 
 <template>
   <div class="panel-main">
     <a :href="authorizeLink">authorize</a>
-    <v-checkbox @change="onChangeCheckboxAll" label="select all" hide-details></v-checkbox>
-    <v-chip-group v-model="taskItemDetailFitlers" multiple selected-class="text-primary">
+    <v-checkbox @click.stop @change.stop="onChangeCheckboxAll" label="select all" hide-details></v-checkbox>
+    <v-chip-group class="task-item-detail-filters" v-model="taskItemDetailFitlers" multiple selected-class="text-primary">
       <v-chip prepend-icon="mdi-eye-outline" :value="TaskItemDetailFilters.Content">content</v-chip>
+      <v-chip prepend-icon="mdi-account-key-outline" :value="2">login</v-chip>
     </v-chip-group>
-    <GridLayout v-model:layout="layoutFromTasksList" :responsive="false" :is-bounded="true" :use-css-transforms="true"
-      :vertical-compact="false" @layout-updated="layoutUpdatedEvent">
+    <GridLayout :class="[gridLayoutClasses.contentEmpty]" v-model:layout="layoutFromTasksList" :responsive="false"
+      :is-bounded="true" :use-css-transforms="true" :vertical-compact="false" @layout-updated="layoutUpdatedEvent">
       <Popover v-for="item in layoutFromTasksList" :item="item" :key="item.i">
         <GridItem :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" @mouseover="onItemHover($event, item)">
           <div class="task-item__inner">
@@ -237,9 +242,13 @@ h3 {
   border-radius: 4px;
 }
 
+.task-item-detail-filters {
+  user-select: none;
+}
+
 .task-item__i,
 .task-item__title {
-  font-size: .5rem;
+  font-size: 0.5rem;
 }
 
 .task-item__inner {
@@ -252,6 +261,6 @@ h3 {
 }
 
 .task-item__title {
-  font-size: .5rem;
+  font-size: 0.5rem;
 }
 </style>

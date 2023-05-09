@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import PanelMain from './components/PanelMain.vue'
+import PanelMain from './components/PanelMain_draft.vue'
+import { DialogId } from './common/dialogs';
+import GlobalConfirm from '@/components/Dialogs/Confirm.vue'
 </script>
 
 <template>
@@ -14,6 +16,9 @@ import PanelMain from './components/PanelMain.vue'
   </header>
 
   <RouterView />
+  <!-- TODO: refactor: extract vue component -->
+  <v-dialog :value="DialogId.TaskItemDetail"></v-dialog>
+  <global-confirm />
 </template>
 
 <style scoped>

@@ -3,12 +3,9 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  // "[vue]": {
-  //   "editor.formatOnSave": true
-  // },
   "typescript.referencesCodeLens.enabled": true,
   "typescript.referencesCodeLens.showOnAllFunctions": true,
   "javascript.referencesCodeLens.enabled": true,
-  "javascript.referencesCodeLens.showOnAllFunctions": true,
-  "vue.codeActions.enabled": false
+  "javascript.referencesCodeLens.showOnAllFunctions": true
+  "vue.codeActions.enabled": true,
 }
