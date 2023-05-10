@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig } from 'axios'
+import { Projects } from './apis'
 
 const {
   VITE_SWIT_API_BASEURL,
@@ -12,7 +13,7 @@ const client = axios.create({ baseURL: VITE_SWIT_API_BASEURL })
 export const tokenURL = VITE_SWIT_API_BASEURL + '/oauth/token'
 export const authorizeURL = VITE_SWIT_API_BASEURL + '/oauth/authorize'
 
-export const requestConfig = {
+export const apis = {
   authorize: () => {
     const client_id = VITE_CLIENT_ID
     const response_type = 'code'
@@ -52,6 +53,7 @@ export const requestConfig = {
       },
     ]
   },
+  Projects,
 }
 
 export default client
