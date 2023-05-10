@@ -8,7 +8,7 @@ import type { Auth, SwitTokenResponse } from '@/auth'
 import {
   createApplyGridItemData,
   type CreateGrid,
-} from '@/helpers/grid-view-features'
+} from '@/helpers/grid-view-utils'
 import { tasksList as tasksListData } from '@/data/swit-tasks-list'
 import type { GridBase, SwitTaskItem } from '@/types'
 import { useGlobalDialogs } from '@/composables/use-global-dialogs'

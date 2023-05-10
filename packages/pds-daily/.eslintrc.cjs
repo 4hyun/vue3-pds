@@ -1,5 +1,5 @@
 /* eslint-env node */
-require('@rushstack/eslint-patch/modern-module-resolution')
+require('@rushstack/eslint-patch/modern-module-resolution');
 
 module.exports = {
   root: true,
@@ -18,16 +18,4 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
   },
-  rules: {
-    'vue/max-attributes-per-line': [
-      'error',
-      {
-        singleline: 1,
-        multiline: {
-          max: 1,
-          allowFirstLine: false,
-        },
-      },
-    ],
-  },
-}
+};
