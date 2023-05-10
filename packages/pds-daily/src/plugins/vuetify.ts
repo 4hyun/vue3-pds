@@ -1,19 +1,12 @@
-import 'vuetify/styles';
-import '@mdi/font/css/materialdesignicons.css';
-import { createVuetify } from 'vuetify';
-import {
-  VCheckbox,
-  VDialog,
-  VChip,
-  VChipGroup,
-  VTextField,
-  VBtn,
-} from 'vuetify/components';
-import * as directives from 'vuetify/directives';
+import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
 const vuetify = createVuetify({
-  components: { VCheckbox, VDialog, VChip, VChipGroup, VTextField, VBtn },
+  components,
   directives,
-});
+})
 
-export default vuetify;
+export default vuetify

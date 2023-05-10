@@ -1,0 +1,4 @@
+.disabled-input {
+  cursor: default !important;
+  user-select: none !important;
+}

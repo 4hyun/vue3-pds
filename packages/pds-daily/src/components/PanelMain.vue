@@ -3,7 +3,7 @@ import { onMounted, ref, inject, computed, type Slots } from 'vue'
 import { useTheme } from 'vuetify'
 import { GridLayout, GridItem } from 'vue3-grid-layout-next'
 import data from '@/data/grid-mock-simple'
-import { client, apis, tokenURL } from '@/api/swit'
+import { client, apis, TOKEN_URL } from '@/api/swit'
 import type { Auth, SwitTokenResponse } from '@/auth'
 import {
   createApplyGridItemData,
@@ -122,7 +122,7 @@ function Popover(
   return slots?.default ? slots.default() : null
 }
 
-const authorizeRequestConfig = apis.authorize()
+const authorizeRequestConfig = apis.Auth.authorize()
 const authorizeParams = new URLSearchParams(authorizeRequestConfig.params)
 const authorizeLink = `${authorizeRequestConfig.url
   }/?${authorizeParams.toString()}`
@@ -132,7 +132,7 @@ const useAuthTokenAsync = async (): Promise<[SwitTokenResponse] | []> => {
   let result: [] | [SwitTokenResponse] = []
   const searchParams = new URLSearchParams(search)
   const code = searchParams.get('code')
-  console.log({ searchParams, tokenURL, code, client })
+  console.log({ searchParams, TOKEN_URL, code, client })
   if (!code) return result
 
   try {

@@ -1,6 +1,5 @@
 import type { AxiosResponse } from 'axios'
-
-const PAGE_LIMIT = 20
+import { PAGE_LIMIT } from './constants'
 
 export const usePageParams = (response: AxiosResponse) => {
   const offset = response.data.offset
